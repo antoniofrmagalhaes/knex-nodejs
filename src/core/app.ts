@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import express from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
 import cors from 'cors'
 import { Server } from 'http'
 
 import routes from './routes'
-import GlobalErrorHandler from './errors/GlobalErrorHandler'
+import AppError from './errors/AppError'
 
 class App {
   public app: express.Application
@@ -23,12 +23,23 @@ class App {
     this.app.use(express.json())
   }
 
-  private routes(): void {
-    this.app.use(routes)
+  private globalErrorHandler(): void {
+    this.app.use(
+      (e: Error, request: Request, response: Response, _: NextFunction) => {
+        if (e instanceof AppError) {
+          return response.status(e.statusCode).json({
+            message: e.message,
+          })
+        }
+        return response.status(500).json({
+          message: e.message,
+        })
+      }
+    )
   }
 
-  private globalErrorHandler(): void {
-    this.app.use(GlobalErrorHandler)
+  private routes(): void {
+    this.app.use(routes)
   }
 }
 
