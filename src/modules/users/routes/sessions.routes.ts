@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 import knex from '../../../database/connection'
 
-import BCryptPasswordHashProvider from '../providers/password/bcrypt/BCryptPasswordHashProvider'
+import BCryptPasswordHashProvider from '../providers/hash/bcrypt/BCrypt'
 
 const sessionsRoute = express.Router()
 
