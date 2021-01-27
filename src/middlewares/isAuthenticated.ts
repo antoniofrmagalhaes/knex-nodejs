@@ -14,11 +14,11 @@ export default function isAuthenticated(
   _: Response,
   next: NextFunction
 ): void {
-  const authHeader = request.headers.authorization
-  if (!authHeader) {
-    throw new AppError('JWT is missing', 401)
+  const { authorization } = request.headers
+  if (!authorization) {
+    throw new AppError('Token is missing', 401)
   }
-  const [, token] = authHeader.split(' ')
+  const [, token] = authorization.split(' ')
   try {
     const decoded = verify(token, 'some-secret')
     const { sub } = decoded as IPayload
